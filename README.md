@@ -34,6 +34,8 @@ To prepare everything for the Wordpress installation (including a mysql database
 Now we can reach the Wordpress config script via:
 
     http://www.user.xyz00.hostsharing.net
+    
+or via the domain set in the inventory file.
 
 
 --- Open Source Hosting ---
