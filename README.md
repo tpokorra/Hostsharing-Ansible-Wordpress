@@ -21,22 +21,17 @@ Then we change the working directory:
 
     $ cd Hostsharing-Ansible-Wordpress
 
-All needed parameters can be set in the inventory file now. Change xyz00 to the name of your package admin. Set the name of a new user and a password. This username and password will be used in the database installation process too (database-name: xyz00_user). Please consider changing them both (NewUser-password in HSAdmin and Database-password) after the installation. We can edit the inventory file with:
+All needed parameters can be set in the inventory file now. Change xyz00 to the name of your package admin. Set the name of a domain, a new user and a password. We can edit the inventory file with:
 
     $ vim inventory
-
-Now the Option -i can be used to read this inventory file instead of the /etc/ansible/hosts file. If we want to login with an SSH-Key instead of an SSH-Password, we have to remove the -k option from the following string. The -K is needed to prompt us once for the sudo password of the new user.
-
-To prepare everything for the Wordpress installation (including a mysql database) we run:
+    
+The option -i can be used to read this inventory file instead of the /etc/ansible/hosts file. If we want to login with an SSH-Key instead of an SSH-Password, we have to remove the -k option from the following string. The -K is needed to prompt us once for the sudo password of the new user. We run:
 
     $ ansible-playbook -i inventory playbook-wordpress.yml -k -K
 
-Now we can reach the Wordpress config script via:
+Now we can reach our site via:
 
-    http://www.user.xyz00.hostsharing.net
-    
-or via the domain set in the inventory file.
-
+    http://www.example.org
 
 --- Open Source Hosting ---
  https://www.hostsharing.net
