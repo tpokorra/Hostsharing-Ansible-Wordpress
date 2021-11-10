@@ -15,7 +15,7 @@ This file should be protected, else it would be world readable:
 
 We clone this git-repo to our machine:
 
-    $ git clone https://github.com/Dominic-Schlegel/Hostsharing-Ansible-Wordpress.git
+    $ git clone https://github.com/tpokorra/Hostsharing-Ansible-Wordpress.git
 
 Then we change the working directory:
 
