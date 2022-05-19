@@ -1,0 +1,13 @@
+wordpress:
+  hosts:
+    xyz00-wp:
+      ansible_ssh_host: xyz00.hostsharing.net
+      ansible_ssh_user: xyz00
+      pac: xyz00
+      domain: www.example.org
+      user: wp
+      password: testpassw0rd_changeme
+
+      adminname: my_admin
+      adminpwd: CHANGEME
+      adminemail: no-reply@example.org

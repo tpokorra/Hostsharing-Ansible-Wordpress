@@ -1,2 +1,0 @@
-[wordpress]
-xyz00 ansible_ssh_host=xyz00.hostsharing.net ansible_ssh_user=xyz00 pac=xyz00 domain=wwww.example.org user=wp password=testpassw0rd!?
