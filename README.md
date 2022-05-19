@@ -23,6 +23,7 @@ Then we change the working directory:
 
 All needed parameters can be set in the inventory file now. Change xyz00 to the name of your package admin. Set the name of a domain, a new user and a password. We can edit the inventory file with:
 
+    $ cp inventory-sample.yml inventory.yml
     $ vim inventory.yml
     
 The option -i can be used to read this inventory file instead of the /etc/ansible/hosts file.  We want to login with an SSH-Key. We run:
