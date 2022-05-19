@@ -14,3 +14,16 @@ wordpress:
       sitename: Meine Wordpress Seite
 
       random_minute: "17"
+
+
+      # Auf der Seite {@link https://api.wordpress.org/secret-key/1.1/salt/ WordPress.org secret-key service}
+      # kannst du dir alle Schlüssel generieren lassen.
+      # oder so: secret=`openssl rand -base64 64 | tr -d '\n'`
+      AUTH_KEY: 'x>($=-%#R~sKNbn_ZPQG*zF+]UW:wc*KXHznj2NqI:{t/76NG2=v*[>QSj}`1qw?'
+      SECURE_AUTH_KEY: 'hTgbk((atFJAuXFL5Nba7<J>s+#[,Kg&GlVi>+s;9FcL1gUzK%-vWs;Miu-IFA^Q'
+      LOGGED_IN_KEY: '(? H&$:+iW|nb,0Crci2Ldcp8W_0O+rt!M@uUAR_9LB!+2`p/X8$8>WyX^:kaRGQ'
+      NONCE_KEY: ']a{cP*K4!vnUNc+f5bh{z^3&C`4N-DXP(uhH%_Xrl/0v/vd^lAp kxfmIhB~)eRE'
+      AUTH_SALT: '-GTjMtO%T4h m*&%xnpbzC&<A|:H[zw78yuZN>qos)w9LRI7#yc6^ntt%+>v8@zj'
+      SECURE_AUTH_SALT: 'nt) 7H<yG >|4]}!*YyLMHN+%=pq*Q# skr10m!PJ$6XzB;Xq-krec,Gy 3e41(Q'
+      LOGGED_IN_SALT: '-9464UvHSo.6Z:/KJ@-v5i@|&ui(^5u+q6lr-9]lF~aQPUgw2>f)]4~0Ar,AqUeM'
+      NONCE_SALT: 'Ui(p.1c2<fe%lX:XGQU|su>.20F_3 A}>#is9[gIY V}F+:kvl*P~ng~sx-5j+v5'

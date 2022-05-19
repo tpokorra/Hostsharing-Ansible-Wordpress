@@ -50,12 +50,23 @@
       remote_src: yes
       dest: /home/pacs/{{pac}}/users/{{user}}
 
-  - name: drop htdocs-ssl
+  ########################
+  ## setup the apache site
+  ########################
+  - name: check for htdocs-ssl directory
+    become: yes
+    become_user: "{{pac}}-{{user}}"
+    stat:
+      path: "/home/pacs/{{pac}}/users/{{user}}/doms/{{domain}}/htdocs-ssl"
+    register: htdocs_exists
+
+  - name: drop htdocs-ssl directory
     become: yes
     become_user: "{{pac}}-{{user}}"
     file:
-       path: "/home/pacs/{{pac}}/users/{{user}}/doms/{{domain}}/htdocs-ssl"
-       state: absent
+      path: "/home/pacs/{{pac}}/users/{{user}}/doms/{{domain}}/htdocs-ssl"
+      state: absent
+    when: htdocs_exists.stat.islnk is defined and htdocs_exists.stat.islnk == False
 
   - name: create symbolic link for htdocs-ssl
     become: yes
@@ -68,57 +79,13 @@
   #################################
   ## prepare configuration file
   #################################
-  - name: copy config file
+  - name: upload config file
     become: yes
     become_user: "{{pac}}-{{user}}"
-    copy:
-      src: "/home/pacs/{{pac}}/users/{{user}}/wordpress/wp-config-sample.php"
-      remote_src: yes
-      dest: "/home/pacs/{{pac}}/users/{{user}}/wordpress/wp-config.php"
-  - name: set user name
-    become: yes
-    become_user: "{{pac}}-{{user}}"
-    lineinfile:
-      path: "/home/pacs/{{pac}}/users/{{user}}/wordpress/wp-config.php"
-      regexp: '^define\( ''DB_USER'','
-      line: "define( 'DB_USER', '{{pac}}_{{user}}' );"
-  - name: set database name
-    become: yes
-    become_user: "{{pac}}-{{user}}"
-    lineinfile:
-      path: "/home/pacs/{{pac}}/users/{{user}}/wordpress/wp-config.php"
-      regexp: '^define\( ''DB_NAME'','
-      line: "define( 'DB_NAME', '{{pac}}_{{user}}' );"
-  - name: set database password
-    become: yes
-    become_user: "{{pac}}-{{user}}"
-    lineinfile:
-      path: "/home/pacs/{{pac}}/users/{{user}}/wordpress/wp-config.php"
-      regexp: '^define\( ''DB_PASSWORD'','
-      line: "define( 'DB_PASSWORD', '{{password}}' );"
-  - name: set keys and salts
-    become: yes
-    become_user: "{{pac}}-{{user}}"
-    shell: |
-      secret=`openssl rand -base64 64 | tr -d '\n'`
-      sed -i "s#'AUTH_KEY',.*#'AUTH_KEY', '$secret');#g" wp-config.php
-      secret=`openssl rand -base64 64 | tr -d '\n'`
-      sed -i "s#'SECURE_AUTH_KEY',.*#'SECURE_AUTH_KEY', '$secret');#g" wp-config.php
-      secret=`openssl rand -base64 64 | tr -d '\n'`
-      sed -i "s#'LOGGED_IN_KEY',.*#'LOGGED_IN_KEY', '$secret');#g" wp-config.php
-      secret=`openssl rand -base64 64 | tr -d '\n'`
-      sed -i "s#'NONCE_KEY',.*#'NONCE_KEY', '$secret');#g" wp-config.php
-      secret=`openssl rand -base64 64 | tr -d '\n'`
-      sed -i "s#'AUTH_SALT',.*#'AUTH_SALT', '$secret');#g" wp-config.php
-      secret=`openssl rand -base64 64 | tr -d '\n'`
-      sed -i "s#'SECURE_AUTH_SALT',.*#'SECURE_AUTH_SALT', '$secret');#g" wp-config.php
-      secret=`openssl rand -base64 64 | tr -d '\n'`
-      sed -i "s#'LOGGED_IN_SALT',.*#'LOGGED_IN_SALT', '$secret');#g" wp-config.php
-      secret=`openssl rand -base64 64 | tr -d '\n'`
-      sed -i "s#'NONCE_SALT',.*#'NONCE_SALT', '$secret');#g" wp-config.php
-    args:
-      executable: /bin/bash
-      chdir: "/home/pacs/{{pac}}/users/{{user}}/wordpress"
+    template:
+      dest: "/home/pacs/{{pac}}/users/{{user}}/wordpress/wp-config.php" 
+      src: "templates/wp-config.php"
+      mode: 0644
 
   #######################
   ## initialise wordpress
