@@ -11,3 +11,6 @@ wordpress:
       adminname: my_admin
       adminpwd: CHANGEME
       adminemail: no-reply@example.org
+      sitename: Meine Wordpress Seite
+
+      random_minute: "17"

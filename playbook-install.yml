@@ -14,6 +14,29 @@
   - name: setup database
     hsdatabase.js: name="{{pac}}_{{user}}" password="{{password}}" instance="mysql" exists="true"
 
+  - name: Sleep to avoid issue invalid user for temporary files
+    pause:
+      seconds: 10
+
+  #################################
+  ## install useful helper script
+  #################################
+  - name: create bin directory
+    become: yes
+    become_user: "{{pac}}-{{user}}"
+    file:
+      path: "/home/pacs/{{pac}}/users/{{user}}/bin"
+      state: directory
+      mode: 0744
+
+  - name: download wp-cli
+    become: yes
+    become_user: "{{pac}}-{{user}}"
+    get_url:
+      # see https://wp-cli.org
+      url: https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+      dest: /home/pacs/{{pac}}/users/{{user}}/bin/wp-cli.phar
+      mode: '0700'
 
   #################################
   ## install wordpress
@@ -96,3 +119,36 @@
     args:
       executable: /bin/bash
       chdir: "/home/pacs/{{pac}}/users/{{user}}/wordpress"
+
+  #######################
+  ## initialise wordpress
+  #######################
+  - name: create site with admin user
+    become: yes
+    become_user: "{{pac}}-{{user}}"
+    shell: |
+      $HOME/bin/wp-cli.phar core install \
+        --url='{{ domain }}' --title='{{ sitename }}' \
+        --allow-root --no-color --path='/home/pacs/{{pac}}/users/{{user}}/wordpress' \
+        --admin_name='{{ adminname }}' \
+        --admin_email='{{ adminemail }}' \
+        --admin_password='{{ adminpwd }}' || exit -1
+      touch /home/pacs/{{pac}}/users/{{user}}/.wordpressinitialized
+    args:
+      executable: /bin/bash
+      chdir: "/home/pacs/{{pac}}/users/{{user}}/wordpress"
+      creates: "/home/pacs/{{pac}}/users/{{user}}/.wordpressinitialized"
+
+  #################################
+  ## configure cronjobs
+  #################################
+  - name: setup cronjob for plugin and theme update
+    # https://developer.wordpress.org/cli/commands/plugin/update/
+    # https://developer.wordpress.org/cli/commands/theme/update/
+    become: yes
+    become_user: "{{pac}}-{{user}}"
+    cron:
+      name: "run wordpress plugin and theme updates"
+      hour: "5"
+      minute: "{{random_minute}}"
+      job: "cd /home/pacs/{{pac}}/users/{{user}}/wordpress && ~/bin/wp-cli.phar plugin update --all && ~/bin/wp-cli.phar theme update --all"
